@@ -39,7 +39,7 @@ for country in countries:
     df = dfd[dfd['country'].str.match(country)]
     rows, cols = df.shape
     if rows > 1:
-        print("here", country)
+
         found = -999
         for i in range(len(df)):
             country_name_len = len(df.country.values[i])
@@ -53,13 +53,20 @@ for country in countries:
     days = np.arange(len(dates))
     total = df.values.flatten()[1:]
 
-    if len(total) == 0:
-        print("issue")
-        print(country)
-    else:
+    idx = np.argwhere(total > 10)
 
-        #plt.plot(days, total)
-        plt.plot(dates, total)
+    if len(idx) > 0 and len(total) > 0:
+
+        total = total[idx]
+        days = days[idx]
+
+        days = [d - days[0] for d in days]
+        
+
+        plt.plot(days, total)
+        #plt.plot(dates, total)
         xmin, xmax = plt.xlim()
         plt.xticks(np.round(np.linspace(xmin, xmax, 10), 2))
+#plt.xscale("log")
+plt.yscale("log")
 plt.show()
