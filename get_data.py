@@ -20,7 +20,7 @@ import glob
 
 class GetCOVID19Data:
 
-    def __init__(self, data_dir="data"):
+    def __init__(self, data_dir="data/raw"):
 
         self.data_dir = data_dir
         self.base_url = ("https://raw.githubusercontent.com/CSSEGISandData/"
