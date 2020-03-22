@@ -13,12 +13,6 @@ __author__ = "Martin De Kauwe"
 __version__ = "1.0 (23.03.2020)"
 __email__ = "mdekauwe@gmail.com"
 
-import os
-import csv
-import sys
-import urllib.request
-import glob
-
 def SIR(S, I, R, beta, gamma):
     """
     Susceptible: people vulnerable to exposure with infectious people
