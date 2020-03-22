@@ -24,10 +24,9 @@ def rmse(p, data, S0, I0, R0):
 
     size = len(data)
     beta, gamma = p
-    time = np.arange(0, len(data), 1)
-
-    sol = solve_ivp(lambda t, y: SIR(t, y, beta, gamma), t_span=[0, size],
-                    y0=[S0, I0, R0], t_eval=time, vectorized=True)
+    t = np.arange(0, len(data), 1)
+    sol = solve_ivp(lambda t, y: SIR(t, y, p), t_span=[0, size],
+                    y0=[S0, I0, R0], t_eval=t, vectorized=True)
 
     return np.sqrt(np.mean((sol.y[1] - data)**2))
 
@@ -49,10 +48,10 @@ if __name__ == "__main__":
     fname = os.path.join(data, "confirmed_totals.csv")
     df = pd.read_csv(fname)
 
-    S0 = 10000 # set something sensible
-    I0 = 1     # set something sensible
-    R0 = 2     # set something sensible
-    country = "China"
+    S0 = 15000    # set something sensible
+    I0 = 50        # set something sensible
+    R0 = 2.25     # set something sensible
+    country = "Japan"
 
     df = df[df['country'].str.match(country)]
     df.reset_index(drop=True, inplace=True)
@@ -63,5 +62,21 @@ if __name__ == "__main__":
     confirmed = df.values.flatten()
 
     (beta, gamma) = fit_model(dates, confirmed, S0, I0, R0)
-
     print(beta, gamma)
+
+    size = len(dates)
+    t = np.arange(0, len(dates), 1)
+    sol = solve_ivp(lambda t, y: SIR(t, y, [beta,gamma]), t_span=[0, size],
+                    y0=[S0, I0, R0], t_eval=t, vectorized=True)
+
+    ss = sol.y[0]
+    ii = sol.y[1]
+    rr = sol.y[2]
+
+
+    plt.plot(t, confirmed, label="observed")
+    plt.plot(t, ss, label="Susceptible")
+    plt.plot(t, ii, label="Infectious")
+    plt.plot(t, rr, label="Recovered")
+    plt.legend(numpoints=1)
+    plt.show()

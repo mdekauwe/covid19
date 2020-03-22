@@ -13,8 +13,12 @@ __author__ = "Martin De Kauwe"
 __version__ = "1.0 (23.03.2020)"
 __email__ = "mdekauwe@gmail.com"
 
-def SIR(t, y, beta, gamma):
+import sys
+
+def SIR(t, y, params):
     """
+    Function to compute derivative of the ODE system
+
     Susceptible: people vulnerable to exposure with infectious people
     Infectious: infected people
     Recovered: people get immunity
@@ -22,10 +26,11 @@ def SIR(t, y, beta, gamma):
     where Beta controls how much of the disease is transmitted via exposure and
     gamma sets the recovery rate
     """
-    S = y[0]
-    I = y[1]
-    R = y[2]
+    # unpacking
+    S, I, R = y
+    beta, gamma = params
 
+    # ODEs
     dS_dt = -beta * S * I
     dI_dt = beta * S * I - gamma * I
     dR_dt = gamma * I
