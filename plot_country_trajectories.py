@@ -54,11 +54,10 @@ for country in countries:
     total = df.values.flatten()[1:]
 
     if len(total) == 0:
-        print("some countries need to be joined")
         print("issue")
         print(country)
     else:
-        
+
         plt.plot(days, total)
         plt.plot(dates, total)
         xmin, xmax = plt.xlim()
