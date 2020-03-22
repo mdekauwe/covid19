@@ -58,7 +58,7 @@ for country in countries:
         print(country)
     else:
 
-        plt.plot(days, total)
+        #plt.plot(days, total)
         plt.plot(dates, total)
         xmin, xmax = plt.xlim()
         plt.xticks(np.round(np.linspace(xmin, xmax, 10), 2))
