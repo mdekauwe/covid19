@@ -18,7 +18,7 @@ import sys
 import urllib.request
 import glob
 
-class COVID19Data:
+class GetCOVID19Data:
 
     def __init__(self, data_dir="data"):
 
@@ -52,5 +52,5 @@ class COVID19Data:
 
 if __name__ == "__main__":
 
-    C = COVID19Data()
-    C.get_data()
+    G = GetCOVID19Data()
+    G.get_data()
