@@ -32,6 +32,8 @@ dfr = pd.read_csv(fname)
 countries = sorted(dfd.country.unique().tolist())
 pattern = r"test-[0-9]+$"
 
+
+number_of_deaths = 10
 for country in countries:
 
     # horrible, no doubt there is an easier way...but we match two
@@ -53,15 +55,14 @@ for country in countries:
     days = np.arange(len(dates))
     total = df.values.flatten()[1:]
 
-    idx = np.argwhere(total > 10)
+    # just plot days since Nth death
+    idx = np.argwhere(total > number_of_deaths)
 
     if len(idx) > 0 and len(total) > 0:
 
         total = total[idx]
         days = days[idx]
-
-        days = [d - days[0] for d in days]
-        
+        days = [d - days[0] for d in days] # recentre at 0
 
         plt.plot(days, total)
         #plt.plot(dates, total)
