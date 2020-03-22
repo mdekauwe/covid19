@@ -17,21 +17,32 @@ import glob
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import re
+
+plot_dir = "plots"
+if not os.path.exists(plot_dir):
+    os.makedirs(plot_dir)
 
 data = "data/processed"
 fname = os.path.join(data, "deaths_totals.csv")
 dfd = pd.read_csv(fname)
 
-fname = os.path.join(data, "confirmed_totals.csv")
-dfc = pd.read_csv(fname)
-
-fname = os.path.join(data, "recovered_totals.csv")
-dfr = pd.read_csv(fname)
-
 countries = sorted(dfd.country.unique().tolist())
-pattern = r"test-[0-9]+$"
 
+width = 9
+height = 6
+fig = plt.figure(figsize=(width, height))
+fig.subplots_adjust(hspace=0.05)
+fig.subplots_adjust(wspace=0.05)
+plt.rcParams['text.usetex'] = False
+plt.rcParams['font.family'] = "sans-serif"
+plt.rcParams['font.sans-serif'] = "Helvetica"
+plt.rcParams['axes.labelsize'] = 14
+plt.rcParams['font.size'] = 14
+plt.rcParams['legend.fontsize'] = 10
+plt.rcParams['xtick.labelsize'] = 14
+plt.rcParams['ytick.labelsize'] = 14
+
+ax = fig.add_subplot(111)
 
 number_of_deaths = 10
 for country in countries:
@@ -64,10 +75,12 @@ for country in countries:
         days = days[idx]
         days = [d - days[0] for d in days] # recentre at 0
 
-        plt.plot(days, total)
-        #plt.plot(dates, total)
-        xmin, xmax = plt.xlim()
-        plt.xticks(np.round(np.linspace(xmin, xmax, 10), 2))
+        ax.plot(days, total)
+
+ax.set_xlabel("Days since 10th death")
+ax.set_ylabel("Cumulative deaths")
 #plt.xscale("log")
-plt.yscale("log")
+ax.set_yscale("log")
+ofname = "cumulative_deaths.pdf"
+fig.savefig(os.path.join(plot_dir, ofname), bbox_inches='tight', pad_inches=0.1)
 plt.show()
