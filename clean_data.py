@@ -17,7 +17,7 @@ import csv
 import sys
 import glob
 import pandas as pd
-
+import numpy as np
 
 def clean_data(fname, type, processed_dir):
 
@@ -26,7 +26,9 @@ def clean_data(fname, type, processed_dir):
     df = df.rename({"province/state": "state", "country/region": "country",
                     "long": "lon"}, axis='columns')
 
-    # Create a new dataframe with just todays cases
+    #
+    ## Create a new dataframe with just todays cases...
+    #
     df_today = df.drop(df.columns[4:len(df.columns)-1], axis='columns')
     df_today.columns = [*df_today.columns[:-1], type]
 
@@ -36,6 +38,53 @@ def clean_data(fname, type, processed_dir):
     ofname = os.path.join(processed_dir, "%s_today.csv" % (type))
     df_today.to_csv(ofname, index=False)
 
+    #
+    ## Create dataframes with daily stuff...
+    #
+    data = "data/processed"
+    fname = os.path.join(data, "deaths.csv")
+    dfd = pd.read_csv(fname)
+
+    fname = os.path.join(data, "confirmed.csv")
+    dfc = pd.read_csv(fname)
+
+    fname = os.path.join(data, "recovered.csv")
+    dfr = pd.read_csv(fname)
+
+    #
+    ## Clean up by country so we get totals per day, currently we have
+    ## state info too
+    #
+    countries = sorted(dfd.country.unique().tolist())
+    country = countries[0]
+    df = dfd[dfd['country'].str.match(country)]
+    sums = df.select_dtypes(pd.np.number).sum().rename('total')
+
+    df = df.append(sums)
+    df.loc["total","lat"] = np.nan
+    df.loc["total","lon"] = np.nan
+    df.loc["total","country"] = country
+    df = df[df.index == "total"]
+    df = df.drop(['state', 'lat', 'lon'], axis=1)
+
+    for country in countries[1:]:
+
+        dfx = dfd[dfd['country'].str.match(country)]
+        sums = dfx.select_dtypes(pd.np.number).sum().rename('total')
+
+        dfx = dfx.append(sums)
+        dfx.loc["total","lat"] = np.nan
+        dfx.loc["total","lon"] = np.nan
+        dfx.loc["total","country"] = country
+        dfx = dfx[dfx.index == "total"]
+        dfx = dfx.drop(['state', 'lat', 'lon'], axis=1)
+
+        df = df.append(dfx)
+    df = df.reset_index()
+    df = df.drop(['index'], axis=1)
+
+    ofname = os.path.join(processed_dir, "%s_totals.csv" % (type))
+    df.to_csv(ofname, index=False)
 
 if __name__ == "__main__":
 
