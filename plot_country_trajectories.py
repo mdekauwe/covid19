@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Get overall numbers
+Plot the cumulative number of deaths since the Nth day...
 
 That's all folks.
 """
