@@ -58,27 +58,19 @@ def clean_data(fname, type, processed_dir):
     ## Create dataframes with daily stuff...
     #
     data = "data/processed"
-    fname = os.path.join(data, "deaths.csv")
-    dfd = pd.read_csv(fname)
-    dfd = fix_country_names(dfd)
-    countries = sorted(dfd.country.unique().tolist())
-
-    fname = os.path.join(data, "confirmed.csv")
-    dfc = pd.read_csv(fname)
-    dfc = fix_country_names(dfd)
-
-    fname = os.path.join(data, "recovered.csv")
-    dfr = pd.read_csv(fname)
-    dfr = fix_country_names(dfr)
+    fname = os.path.join(data, "%s.csv" % (type))
+    dfy = pd.read_csv(fname)
+    dfy = fix_country_names(dfy)
+    countries = sorted(dfy.country.unique().tolist())
 
 
     #
     ## Clean up by country so we get totals per day, currently we have
     ## state info too
     #
-    countries = sorted(dfd.country.unique().tolist())
+    countries = sorted(dfy.country.unique().tolist())
     country = countries[0]
-    df = dfd[dfd['country'].str.match(country)]
+    df = dfy[dfy['country'].str.match(country)]
     sums = df.select_dtypes(pd.np.number).sum().rename('total')
 
     df = df.append(sums)
@@ -91,7 +83,7 @@ def clean_data(fname, type, processed_dir):
     for country in countries[1:]:
         #print(country)
 
-        dfx = dfd[dfd['country'].str.match(country)]
+        dfx = dfy[dfy['country'].str.match(country)]
         sums = dfx.select_dtypes(pd.np.number).sum().rename('total')
 
         dfx = dfx.append(sums)
@@ -119,4 +111,3 @@ if __name__ == "__main__":
     for fname in files:
         type = os.path.basename(fname).split(".")[0].split("-")[-1].lower()
         clean_data(fname, type, processed_dir)
-        sys.exit()

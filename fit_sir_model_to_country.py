@@ -48,10 +48,10 @@ if __name__ == "__main__":
     fname = os.path.join(data, "confirmed_totals.csv")
     df = pd.read_csv(fname)
 
-    S0 = 15000    # set something sensible
-    I0 = 50        # set something sensible
-    R0 = 2.25     # set something sensible
-    country = "Japan"
+    S0 = 150000    # set something sensible
+    I0 = 200000       # set something sensible
+    R0 = 7         # set something sensible
+    country = "Australia"
 
     df = df[df['country'].str.match(country)]
     df.reset_index(drop=True, inplace=True)
