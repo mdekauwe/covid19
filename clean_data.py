@@ -19,12 +19,28 @@ import glob
 import pandas as pd
 import numpy as np
 
+def fix_country_names(df):
+    # still need to fix congo...
+    for i in range(len(df)):
+
+        if df.country[i] == "Bahamas, The":
+            df.loc[i,"country"]= "Bahamas"
+        elif df.country[i] == "Gambia, The":
+            df.loc[i,"country"]= "Gambia"
+        elif df.country[i] == "Taiwan*":
+            df.loc[i,"country"]= "Taiwan"
+        elif df.country[i] == "Korea, South":
+            df.loc[i,"country"]= "South Korea"
+
+    return df
+
 def clean_data(fname, type, processed_dir):
 
     df = pd.read_csv(fname)
     df = df.rename(str.lower, axis='columns')
     df = df.rename({"province/state": "state", "country/region": "country",
                     "long": "lon"}, axis='columns')
+    df = fix_country_names(df)
 
     #
     ## Create a new dataframe with just todays cases...
@@ -44,12 +60,17 @@ def clean_data(fname, type, processed_dir):
     data = "data/processed"
     fname = os.path.join(data, "deaths.csv")
     dfd = pd.read_csv(fname)
+    dfd = fix_country_names(dfd)
+    countries = sorted(dfd.country.unique().tolist())
 
     fname = os.path.join(data, "confirmed.csv")
     dfc = pd.read_csv(fname)
+    dfc = fix_country_names(dfd)
 
     fname = os.path.join(data, "recovered.csv")
     dfr = pd.read_csv(fname)
+    dfr = fix_country_names(dfr)
+
 
     #
     ## Clean up by country so we get totals per day, currently we have
@@ -68,6 +89,7 @@ def clean_data(fname, type, processed_dir):
     df = df.drop(['state', 'lat', 'lon'], axis=1)
 
     for country in countries[1:]:
+        #print(country)
 
         dfx = dfd[dfd['country'].str.match(country)]
         sums = dfx.select_dtypes(pd.np.number).sum().rename('total')
@@ -97,3 +119,4 @@ if __name__ == "__main__":
     for fname in files:
         type = os.path.basename(fname).split(".")[0].split("-")[-1].lower()
         clean_data(fname, type, processed_dir)
+        sys.exit()
