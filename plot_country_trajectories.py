@@ -18,6 +18,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import ticker
+from matplotlib.ticker import MaxNLocator
+
 
 plot_dir = "plots"
 if not os.path.exists(plot_dir):
@@ -76,8 +78,13 @@ for country in countries:
         days = days[idx]
         days = [d - days[0] for d in days] # recentre at 0
 
-        ax.plot(days, total)
+        if total[-1] > 300:
+            print(country, total[-1])
+            ax.plot(days, total, label=country)
+        else:
+            ax.plot(days, total, color="grey", alpha=0.5)
 
+ax.legend(numpoints=1, loc="best")
 ax.set_xlabel("Days since 10th death")
 ax.set_ylabel("Cumulative deaths")
 #plt.xscale("log")
@@ -86,6 +93,10 @@ ax.set_yscale("log")
 ax.yaxis.set_major_formatter(ticker.FormatStrFormatter("%d"))
 
 ax.set_ylim(10, 5000)
+ax.set_xlim(0, 35)
+#ax.set_yticklabels([10, 100, 200, 500, 1000, 2000, 5000])
+#ax.yaxis.set_major_locator(MaxNLocator(4))
+
 
 ofname = "cumulative_deaths.pdf"
 fig.savefig(os.path.join(plot_dir, ofname), bbox_inches='tight', pad_inches=0.1)
