@@ -19,6 +19,3 @@ import glob
 import pandas as pd
 
 data_dir = "data"
-files = glob.glob(os.path.join(data_dir, "*.csv"))
-for fn in files:
-    print(fn)
