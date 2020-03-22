@@ -64,19 +64,27 @@ if __name__ == "__main__":
     (beta, gamma) = fit_model(dates, confirmed, S0, I0, R0)
     print(beta, gamma)
 
+
+    # plot timeseries, made up numbers to check integrator
+    beta = 0.1
+    gamma = 0.05
+    S0 = 10
+    I0 = 0.01
+    R0 = 2
     size = len(dates)
-    t = np.arange(0, len(dates), 1)
-    sol = solve_ivp(lambda t, y: SIR(t, y, [beta,gamma]), t_span=[0, size],
-                    y0=[S0, I0, R0], t_eval=t, vectorized=True)
+    times = np.arange(0, len(dates), 1)
+    sol = solve_ivp(lambda t, y: SIR(t, y, [beta,gamma]),
+                    t_span=[min(times),max(times)],
+                    y0=[S0, I0, R0], t_eval=times, vectorized=True)
 
     ss = sol.y[0]
     ii = sol.y[1]
     rr = sol.y[2]
+    times = sol.t
 
-
-    plt.plot(t, confirmed, label="observed")
-    plt.plot(t, ss, label="Susceptible")
-    plt.plot(t, ii, label="Infectious")
-    plt.plot(t, rr, label="Recovered")
+    #plt.plot(t, confirmed, label="observed")
+    plt.plot(times, ss, label="Susceptible")
+    plt.plot(times, ii, label="Infectious")
+    plt.plot(times, rr, label="Recovered")
     plt.legend(numpoints=1)
     plt.show()
