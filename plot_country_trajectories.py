@@ -79,8 +79,11 @@ for country in countries:
         days = [d - days[0] for d in days] # recentre at 0
 
         if total[-1] > 300:
-            print(country, total[-1])
             ax.plot(days, total, label=country)
+        elif country == "United Kingdom":
+            ax.plot(days, total, label=country, lw=4)
+        elif country == "Australia":
+            ax.plot(days, total, label=country, lw=4)
         else:
             ax.plot(days, total, color="grey", alpha=0.5)
 
@@ -100,4 +103,4 @@ ax.set_xlim(0, 35)
 
 ofname = "cumulative_deaths.pdf"
 fig.savefig(os.path.join(plot_dir, ofname), bbox_inches='tight', pad_inches=0.1)
-plt.show()
+#plt.show()
