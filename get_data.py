@@ -39,14 +39,14 @@ class COVID19Data:
             files = glob.glob(os.path.join(self.data_dir, "*.csv"))
             for f in files:
                 os.remove(f)
-    
+
     def get_data(self):
 
         self.clean_up_old_files()
 
-        for fname in self.covid_files:
-            url = os.path.join(self.base_url, self.covid_files[fname])
-            ofn = os.path.join(self.data_dir, self.covid_files[fname])
+        for key, fname in self.covid_files.items():
+            url = os.path.join(self.base_url, fname)
+            ofn = os.path.join(self.data_dir, fname)
             urllib.request.urlretrieve(url, ofn)
 
 
