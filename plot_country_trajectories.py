@@ -45,7 +45,11 @@ for country in countries:
     df = df.drop(['state', 'country', 'lat', 'lon'], axis=1)
 
     dates = list(df.columns)
+    days = np.arange(len(dates))
     total = df.values.flatten()
 
+    plt.plot(days, total)
     plt.plot(dates, total)
+    xmin, xmax = plt.xlim()
+    plt.xticks(np.round(np.linspace(xmin, xmax, 10), 2))
 plt.show()
