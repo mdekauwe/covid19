@@ -17,6 +17,7 @@ import glob
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import ticker
 
 plot_dir = "plots"
 if not os.path.exists(plot_dir):
@@ -81,6 +82,11 @@ ax.set_xlabel("Days since 10th death")
 ax.set_ylabel("Cumulative deaths")
 #plt.xscale("log")
 ax.set_yscale("log")
+
+ax.yaxis.set_major_formatter(ticker.FormatStrFormatter("%d"))
+
+ax.set_ylim(10, 5000)
+
 ofname = "cumulative_deaths.pdf"
 fig.savefig(os.path.join(plot_dir, ofname), bbox_inches='tight', pad_inches=0.1)
 plt.show()
