@@ -23,8 +23,9 @@ class GetCOVID19Data:
     def __init__(self, data_dir="data"):
 
         self.data_dir = data_dir
-        self.base_url = ("https://github.com/CSSEGISandData/COVID-19/tree/"
-                         "master/csse_covid_19_data/csse_covid_19_time_series")
+        self.base_url = ("https://raw.githubusercontent.com/CSSEGISandData/"
+                         "COVID-19/master/csse_covid_19_data/"
+                         "csse_covid_19_time_series/")
         self.covid_files = {
             "confirmed_fn": "time_series_19-covid-Confirmed.csv",
             "dead_fn": "time_series_19-covid-Deaths.csv",
