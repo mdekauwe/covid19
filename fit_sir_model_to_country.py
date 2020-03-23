@@ -99,15 +99,12 @@ class SIR(object):
 
     def predict_future_change(self, dates, confirmed, prediction_range):
 
+        orig_times = np.arange(0, len(dates), 1)
         current = dt.datetime.strptime(dates[-1], '%m/%d/%y')
         while len(dates) < prediction_range:
             current = current + dt.timedelta(days=1)
             dates = np.append(dates, dt.datetime.strftime(current, '%m/%d/%y'))
-
-        size = len(dates)
-        new_confirmed = np.concatenate((confirmed, [None] * \
-                                        (size - len(confirmed))))
-
+        
         size = len(dates)
         times = np.arange(0, len(dates), 1)
         sol = solve_ivp(lambda t, y: self.SIR_ode(t, y, [self.beta,self.gamma]),
@@ -120,7 +117,7 @@ class SIR(object):
         rr = sol.y[2]
         times = sol.t
 
-        plt.plot(times, new_confirmed, label="observed")
+        plt.plot(orig_times, confirmed, label="observed")
         plt.plot(times, ss, label="Susceptible")
         plt.plot(times, ii, label="Infectious")
         plt.plot(times, rr, label="Recovered")
