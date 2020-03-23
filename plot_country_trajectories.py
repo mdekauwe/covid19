@@ -19,7 +19,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import ticker
 from matplotlib.ticker import MaxNLocator
-
+from datetime import datetime
 
 plot_dir = "plots"
 if not os.path.exists(plot_dir):
@@ -100,7 +100,7 @@ ax.set_xlim(0, 35)
 #ax.set_yticklabels([10, 100, 200, 500, 1000, 2000, 5000])
 #ax.yaxis.set_major_locator(MaxNLocator(4))
 
-
-ofname = "cumulative_deaths.pdf"
+today = datetime.date(datetime.now())
+ofname = "cumulative_deaths_%s.pdf" % (today)
 fig.savefig(os.path.join(plot_dir, ofname), bbox_inches='tight', pad_inches=0.1)
 #plt.show()
