@@ -6,6 +6,12 @@ diesease model. It assumes once healed you have immunity.
 
 https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology#The_SIR_model
 
+Reference:
+==========
+* William Ogilvy Kermack, A. G. McKendrick and Gilbert Thomas Walker (1927) A
+  contribution to the mathematical theory of epidemics. Proc. R. Soc. Lond.,
+  115, 772.
+  
 That's all folks.
 """
 
@@ -37,7 +43,7 @@ class SIR(object):
         system
 
         Susceptible: people vulnerable to exposure with infectious people
-        Infectious: infected people 
+        Infectious: infected people
         Recovered: people get immunity (this also includes mortality)
 
         where Beta controls how much of the disease is transmitted via exposure
