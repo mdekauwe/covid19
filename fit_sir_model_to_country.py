@@ -42,16 +42,45 @@ def fit_model(dates, confirmed, S0, I0, R0):
     return (beta_fit, gamma_fit)
 
 
+def test():
+
+    # plot timeseries, made up numbers to check integrator
+    beta = 0.1
+    gamma = 0.05
+    S0 = 10
+    I0 = 0.01
+    R0 = 2
+    size = 100
+    times = np.arange(0, size, 1)
+    sol = solve_ivp(lambda t, y: SIR(t, y, [beta,gamma]),
+                    t_span=[min(times),max(times)],
+                    y0=[S0, I0, R0], t_eval=times, vectorized=True)
+
+    ss = sol.y[0]
+    ii = sol.y[1]
+    rr = sol.y[2]
+    times = sol.t
+
+    plt.plot(times, ss, label="Susceptible")
+    plt.plot(times, ii, label="Infectious")
+    plt.plot(times, rr, label="Recovered")
+    plt.legend(numpoints=1)
+    plt.show()
+
+
 if __name__ == "__main__":
+
+    #test()
+    #sys.exit()
 
     data = "data/processed"
     fname = os.path.join(data, "confirmed_totals.csv")
     df = pd.read_csv(fname)
 
-    S0 = 150000    # set something sensible
-    I0 = 200000       # set something sensible
-    R0 = 7         # set something sensible
-    country = "Australia"
+    S0 = 1500      # set something sensible
+    I0 = 2          # set something sensible
+    R0 = 2         # set something sensible
+    country = "Japan"
 
     df = df[df['country'].str.match(country)]
     df.reset_index(drop=True, inplace=True)
@@ -64,13 +93,6 @@ if __name__ == "__main__":
     (beta, gamma) = fit_model(dates, confirmed, S0, I0, R0)
     print(beta, gamma)
 
-
-    # plot timeseries, made up numbers to check integrator
-    beta = 0.1
-    gamma = 0.05
-    S0 = 10
-    I0 = 0.01
-    R0 = 2
     size = len(dates)
     times = np.arange(0, len(dates), 1)
     sol = solve_ivp(lambda t, y: SIR(t, y, [beta,gamma]),
@@ -82,7 +104,7 @@ if __name__ == "__main__":
     rr = sol.y[2]
     times = sol.t
 
-    #plt.plot(t, confirmed, label="observed")
+    plt.plot(times, confirmed, label="observed")
     plt.plot(times, ss, label="Susceptible")
     plt.plot(times, ii, label="Infectious")
     plt.plot(times, rr, label="Recovered")
