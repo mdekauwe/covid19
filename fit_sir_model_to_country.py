@@ -26,7 +26,7 @@ class SIR(object):
 
     def __init__(self, p_guess=[0.001, 0.001], S0=1500, I0=2, R0=2):
 
-        self.p_guess = p_guess # beta, gamma
+        self.p_guess = p_guess # beta, gamma: updated below with fitting
         self.S0 = S0
         self.I0 = I0
         self.R0 = R0
@@ -104,7 +104,7 @@ class SIR(object):
         while len(dates) < prediction_range:
             current = current + dt.timedelta(days=1)
             dates = np.append(dates, dt.datetime.strftime(current, '%m/%d/%y'))
-        
+
         size = len(dates)
         times = np.arange(0, len(dates), 1)
         sol = solve_ivp(lambda t, y: self.SIR_ode(t, y, [self.beta,self.gamma]),
@@ -140,7 +140,7 @@ if __name__ == "__main__":
     dates = df.index.values
     confirmed = df.values.flatten()
 
-    S = SIR()
+    S = SIR(S0=1500, I0=2, R0=2)
     S.fit_model(dates, confirmed, country)
     S.run_simulation(dates)
     S.predict_future_change(dates, confirmed, 100)
