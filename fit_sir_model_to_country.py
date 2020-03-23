@@ -33,11 +33,12 @@ class SIR(object):
 
     def SIR_ode(self, t, y, params):
         """
-        Function to compute derivative of the ODE system
+        Function to compute derivative of the ordinary differential equation
+        system
 
         Susceptible: people vulnerable to exposure with infectious people
-        Infectious: infected people
-        Recovered: people get immunity
+        Infectious: infected people 
+        Recovered: people get immunity (this also includes mortality)
 
         where Beta controls how much of the disease is transmitted via exposure
         and gamma sets the recovery rate
