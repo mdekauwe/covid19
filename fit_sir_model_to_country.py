@@ -72,14 +72,15 @@ class SIR(object):
                            (0.00000001, 0.4)])
 
         beta_fit, gamma_fit = optimal.x
+        self.beta = beta_fit
+        self.gamma = gamma_fit
+        print(self.beta, self.gamma)
 
-        return (beta_fit, gamma_fit)
-
-    def run_simulation(self, dates, beta, gamma):
+    def run_simulation(self, dates):
 
         size = len(dates)
         times = np.arange(0, len(dates), 1)
-        sol = solve_ivp(lambda t, y: self.SIR_ode(t, y, [beta,gamma]),
+        sol = solve_ivp(lambda t, y: self.SIR_ode(t, y, [self.beta,self.gamma]),
                         t_span=[min(times),max(times)],
                         y0=[self.S0, self.I0, self.R0], t_eval=times,
                         vectorized=True)
@@ -96,8 +97,35 @@ class SIR(object):
         plt.legend(numpoints=1)
         plt.show()
 
+    def predict_future_change(self, dates, confirmed, prediction_range):
 
+        current = dt.datetime.strptime(dates[-1], '%m/%d/%y')
+        while len(dates) < prediction_range:
+            current = current + dt.timedelta(days=1)
+            dates = np.append(dates, dt.datetime.strftime(current, '%m/%d/%y'))
 
+        size = len(dates)
+        new_confirmed = np.concatenate((confirmed, [None] * \
+                                        (size - len(confirmed))))
+
+        size = len(dates)
+        times = np.arange(0, len(dates), 1)
+        sol = solve_ivp(lambda t, y: self.SIR_ode(t, y, [self.beta,self.gamma]),
+                        t_span=[min(times),max(times)],
+                        y0=[self.S0, self.I0, self.R0], t_eval=times,
+                        vectorized=True)
+
+        ss = sol.y[0]
+        ii = sol.y[1]
+        rr = sol.y[2]
+        times = sol.t
+
+        plt.plot(times, new_confirmed, label="observed")
+        plt.plot(times, ss, label="Susceptible")
+        plt.plot(times, ii, label="Infectious")
+        plt.plot(times, rr, label="Recovered")
+        plt.legend(numpoints=1)
+        plt.show()
 
 
 if __name__ == "__main__":
@@ -116,7 +144,6 @@ if __name__ == "__main__":
     confirmed = df.values.flatten()
 
     S = SIR()
-    (beta, gamma) = S.fit_model(dates, confirmed, country)
-    print(beta, gamma)
-
-    S.run_simulation(dates, beta, gamma)
+    S.fit_model(dates, confirmed, country)
+    S.run_simulation(dates)
+    S.predict_future_change(dates, confirmed, 100)
