@@ -11,7 +11,7 @@ Reference:
 * William Ogilvy Kermack, A. G. McKendrick and Gilbert Thomas Walker (1927) A
   contribution to the mathematical theory of epidemics. Proc. R. Soc. Lond.,
   115, 772.
-  
+
 That's all folks.
 """
 
@@ -135,15 +135,14 @@ class SIR(object):
 if __name__ == "__main__":
 
     data = "data/processed"
-    fname = os.path.join(data, "confirmed_totals.csv")
+    fname = os.path.join(data, "time_series_covid19_confirmed_global.csv")
     df = pd.read_csv(fname)
 
     country = "Japan"
     df = df[df['country'].str.match(country)]
     df.reset_index(drop=True, inplace=True)
-    df = df.drop("country", axis=1).T
+    df = df.drop(["country","state","lat","lon"], axis=1).T
     df.columns = [''] * len(df.columns)
-
     dates = df.index.values
     confirmed = df.values.flatten()
 

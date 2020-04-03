@@ -27,9 +27,9 @@ class GetCOVID19Data:
                          "COVID-19/master/csse_covid_19_data/"
                          "csse_covid_19_time_series/")
         self.covid_files = {
-            "confirmed_fn": "time_series_19-covid-Confirmed.csv",
-            "dead_fn": "time_series_19-covid-Deaths.csv",
-            "recovered_fn": "time_series_19-covid-Recovered.csv",
+            "confirmed_fn": "time_series_covid19_confirmed_global.csv",
+            "dead_fn": "time_series_covid19_deaths_global.csv",
+            "recovered_fn": "time_series_covid19_recovered_global.csv",
         }
 
     def clean_up_old_files(self):
