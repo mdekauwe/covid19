@@ -138,15 +138,21 @@ if __name__ == "__main__":
     fname = os.path.join(data, "time_series_covid19_confirmed_global.csv")
     df = pd.read_csv(fname)
 
+    #country = "France"
+    #df = df[df['country'].str.match(country)]
+    #df = df[df['state'].isna()]
+
     country = "Japan"
     df = df[df['country'].str.match(country)]
+
     df.reset_index(drop=True, inplace=True)
     df = df.drop(["country","state","lat","lon"], axis=1).T
     df.columns = [''] * len(df.columns)
     dates = df.index.values
     confirmed = df.values.flatten()
 
-    S = SIR(S0=1500, I0=2, R0=2)
+    N = 10000
+    S = SIR(S0=N, I0=1, R0=2)
     S.fit_model(dates, confirmed, country)
     S.run_simulation(dates)
     S.predict_future_change(dates, confirmed, 100)

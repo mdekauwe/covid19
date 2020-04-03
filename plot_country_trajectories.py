@@ -26,7 +26,7 @@ if not os.path.exists(plot_dir):
     os.makedirs(plot_dir)
 
 data = "data/processed"
-fname = os.path.join(data, "deaths_totals.csv")
+fname = os.path.join(data, "time_series_covid19_deaths_global_totals.csv")
 dfd = pd.read_csv(fname)
 
 countries = sorted(dfd.country.unique().tolist())
@@ -95,8 +95,8 @@ ax.set_yscale("log")
 
 ax.yaxis.set_major_formatter(ticker.FormatStrFormatter("%d"))
 
-ax.set_ylim(10, 5000)
-ax.set_xlim(0, 35)
+ax.set_ylim(10, 20000)
+ax.set_xlim(0, 45)
 #ax.set_yticklabels([10, 100, 200, 500, 1000, 2000, 5000])
 #ax.yaxis.set_major_locator(MaxNLocator(4))
 
